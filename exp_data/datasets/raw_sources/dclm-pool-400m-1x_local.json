@@ -1,0 +1,15 @@
+{
+    "uuid": "f12dc026-cc4a-4203-ba9f-9ba08c5945f9",
+    "name": "dclm-pool-400m-1x_local",
+    "creation_date": "2023_10_16-15_37_18",
+    "dataset_url": "/data/horse/ws/jori152b-datacomp_data/dclm-pool-400m-1x/",
+    "manifest_url": null,
+    "sources": [],
+    "tokenized": false,
+    "tokenizer": null,
+    "num_tokens": null,
+    "size": 1455995108,
+    "dcnlp_commit_hash": null,
+    "dcnlp_diff": null,
+    "data_key": "jsonl"
+}
