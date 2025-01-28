@@ -1,0 +1,12 @@
+# hey yo, we should change cc to the other dataset? I guess?
+# I am not sure how this work if I would like to chain pipelines together to have the benefit of intermediate datasets for evalutation
+- source: cc
+  steps:
+    # here the assumption is made that we have. /myfilters/ownFilters.py
+    # where ownFilters.py contains embedding_centroid_filter
+      - func: baselines.myfilters.ownFilters.embedding_angle_filter
+        model_name: "sentence-transformers/all-MiniLM-L6-v2"
+        n_parts: 5
+        threshold_mean: 0.4
+        threshold_std: 0.15
+        std_multiplier: 2

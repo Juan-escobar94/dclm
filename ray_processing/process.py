@@ -67,7 +67,7 @@ def parse_args():
 
 
 # Right now, this is just how I get clear space in /tmp which quickly gets filled by s3 reads
-@ray.remote(max_calls=3)
+@ray.remote(max_calls=3, num_cpus=2, num_gpus=4)
 def process_local_chunk(
     config_data, raw_data_dirpath, jsonl_relpath, source_name, base_output_path, workers, overwrite
 ):
