@@ -22,22 +22,12 @@ gpt_model = GPT2LMHeadModel.from_pretrained(gpt_model_name).to(device)
 gpt_model.eval()  
  
  
-# ds_tokenizer = AutoTokenizer.from_pretrained(deepseek_model_name, trust_remote_code=True)
-# ds_model = AutoModelForCausalLM.from_pretrained(
-#     deepseek_model_name,
-#     torch_dtype=torch.float16,  
-#     trust_remote_code=True
-# ).to(device)
-# 
-# ds_model.eval()
-
 ds_model_base_name = "deepseek-ai/deepseek-llm-7b-base"
 ds_tokenizer_base = AutoTokenizer.from_pretrained(ds_model_base_name)
 ds_model_base = AutoModelForCausalLM.from_pretrained(ds_model_base_name, torch_dtype=torch.bfloat16).to(device)
 ds_model_base.generation_config = GenerationConfig.from_pretrained(ds_model_base_name)
 ds_model_base.generation_config.pad_token_id = ds_model_base.generation_config.eos_token_id
 
-#ds_tokenizer_base.eval()
 
 text_dict = {
     "very_bad_quality": [
@@ -106,7 +96,8 @@ def load_abbreviations(csv_filepath=csv_filepath):
 
 
 def calculate_perplexity(text, model, tokenizer):
-    perplexity = 1000 # in case we fail, just give a very high perplexity score.
+    # In case we fail, just give a very high perplexity score.
+    perplexity = 1000 
     try:
         # Encode the text into input IDs
         input_ids = tokenizer.encode(text, return_tensors='pt').to(model.device)
@@ -173,7 +164,6 @@ def quality_score(spelling_errors, m1_pp, m2_pp, lex_divers, text_standard, verb
         print(f'\traw: {raw}, score: {qual}')
     return qual 
 
-    # return (math.log(text_standard) + math.log(lex_divers)) / (((spelling_errors + 1)**2) * ((m1_pp + m2_pp) / 2))
 
 def filter_urls_from_text(text):
     # Split text into words/tokens
@@ -232,5 +222,5 @@ def construct_csv_from_dataset():
         di = construct_row(text)
         print(di)
 
-#run_example()
-create_csv_from_dataset(spam_data_set, "spam")
+run_example()
+# create_csv_from_dataset(spam_data_set, "spam")
