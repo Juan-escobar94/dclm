@@ -1,0 +1,64 @@
+# Pipeline for RW filters used in DCLM-Baseline. The only difference is we remove the "high-quality" url filter (e.g. for wikipedia, github, etc.)
+- source: cc
+  steps:
+    - func: move_url_modifier   # Necessary because 'url' was not set up in these jsonls, was in page['metadata']['WARC-Target-URI']
+    - func: url_removal_modifier
+    - func: newline_removal_modifier         
+      max_consecutive: 2
+    - func: page_length_filter
+      length_type: word
+      min_length: 50
+      max_length: 100000
+      ignore_punctuation: True
+    - func: word_length_filter
+      min_length: 3
+      max_length: 10
+    - func: symbol_ratio_filter
+      max_symbol_to_word_ratio: 0.1
+    - func: bullet_count_filter
+      max_bullet_start_ratio: 0.9
+    - func: ellipsis_count_filter
+      max_ellipsis_end_ratio: 0.3 
+    - func: alphabetic_word_ratio_filter 
+      max_ratio: 0.2
+    - func: stop_word_filter  
+      count_unique: False                   
+      min_stop_word: 2
+    - func: massive_web_repetition_filters
+    - func: word_counter_enricher
+      key: previous_word_count
+    - func: uppercase_ratio_line_modifier
+      max_ratio: 0.5                       
+    - func: numeric_ratio_line_modifier    
+      max_ratio: 0.999999                    
+    - func: counter_line_modifier        
+    - func: line_length_modifier
+      min_length: 2
+    - func: substring_line_modifier        
+      max_length: 10 
+      banlist: "items in cart"
+      remove_substring_only: True
+    - func: substring_line_modifier
+      max_length: 10
+      banlist: "Read more..."
+      location: suffix
+      remove_substring_only: True
+    - func: substring_line_modifier
+      max_length: 10
+      banlist: "Sign-in"
+      location: prefix
+      remove_substring_only: True
+    - func: word_removal_ratio_filter
+      prev_word_count_key: previous_word_count
+      max_removed_ratio: 0.05
+    - func: baselines.myfilters.ownFilters.embedding_centroid_filter
+      model_name: "sentence-transformers/all-MiniLM-L6-v2"
+      centroid_path: baselines/externalData/centroid.json #specify the path: must be moved by Konrad to the right folder
+      threshold_mean: 0.98
+      threshold_std: 0.01
+      std_multiplier: 2
+    - func: baselines.myfilters.ownFilters.embedding_angle_filter
+      model_name: "sentence-transformers/all-MiniLM-L6-v2"
+      threshold_mean: 0.4
+      threshold_std: 0.2
+      std_multiplier: 2

@@ -1,0 +1,16 @@
+- source: cc
+  steps:
+    # here the assumption is made that we have. /myfilters/ownFilters.py
+    # where ownFilters.py contains embedding_centroid_filter
+    - func: baselines.myfilters.ownFilters.embedding_centroid_filter
+      model_name: "sentence-transformers/all-MiniLM-L6-v2"
+      centroid_path: baselines/externalData/centroid.json #specify the path: must be moved by Konrad to the right folder
+      threshold_mean: 0.98
+      threshold_std: 0.01
+      std_multiplier: 2
+    - func: baselines.myfilters.ownFilters.embedding_angle_filter
+      model_name: "sentence-transformers/all-MiniLM-L6-v2"
+      n_parts: 5
+      threshold_mean: 0.4
+      threshold_std: 0.15
+      std_multiplier: 2
